@@ -1,0 +1,41 @@
+# REPOSITORY                          TAG                 IMAGE ID       CREATED          SIZE
+# lgogdownloader                      syb-debian          d560d6aa94be   26 seconds ago   795MB
+#
+
+FROM debian
+
+# do the installation
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ="Europe/Vienna"
+
+RUN apt update
+RUN apt install -y tzdata
+RUN apt install -y build-essential libcurl4-openssl-dev libboost-regex-dev \
+	libjsoncpp-dev librhash-dev libtinyxml2-dev libhtmlcxx-dev libssl-dev \
+	libboost-system-dev libboost-filesystem-dev libboost-program-options-dev \
+	libboost-date-time-dev libboost-iostreams-dev help2man cmake \
+	pkg-config zlib1g-dev ninja-build \
+	wget curl jq\
+	bash
+
+
+# build the application
+WORKDIR /build
+RUN wget $(curl -s "https://api.github.com/repos/sude-/lgogdownloader/releases/latest" | jq -r '.assets[].browser_download_url') -O /tmp/archive.tar.gz
+RUN cd /build
+RUN tar zxf /tmp/archive.tar.gz && rm -f /tmp/archive.tar.gz && cd $(ls) && ls -l
+
+RUN cd $(ls) && ls -l && \
+	cmake -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -GNinja && \
+	ninja -Cbuild install
+
+# cleanup
+RUN apt remove -y build-essential cmake help2man wget jq ninja-build
+#RUN apt remove -y libcurl4-openssl-dev libboost-regex-dev libjsoncpp-dev librhash-dev libtinyxml2-dev libhtmlcxx-dev libboost-system-dev libboost-filesystem-dev libboost-program-options-dev libboost-date-time-dev libboost-iostreams-dev help2man cmake pkg-config zlib1g-dev
+RUN apt autoremove -y
+
+RUN ls -l /usr/bin/lgogdownloader
+
+# finish line
+#COPY ./entrypoint.sh /run.sh
+ENTRYPOINT ["/usr/bin/lgogdownloader"]

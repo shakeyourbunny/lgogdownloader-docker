@@ -1,0 +1,8 @@
+Docker build for Sude-'s lgogdownloader (https://github.com/Sude-/lgogdownloader).
+
+Dockerfile: image with Alpine Linux
+Dockerfile.debian: debian flavour
+Dockerfile.ubuntu: ubuntu flavour
+
+Note that the Debian and Ubuntu images are very big and contain still the development enviroment.
+
