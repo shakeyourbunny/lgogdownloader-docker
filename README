@@ -6,3 +6,29 @@ Dockerfile.ubuntu: ubuntu flavour
 
 Note that the Debian and Ubuntu images are very big and contain still the development enviroment.
 
+
+BUILD INSTRUCTIONS
+You have to do this as root.
+
+- install docker
+- copy the Dockerfile somewhere
+- change your working directory there with cd.
+- docker build . -t lgogdownloader-syb:latest
+
+After building you can run the docker image with
+
+	docker run lgogdownloader-syb:latest
+
+RUNNING
+
+docker run -ti \ -v "$HOME/.config/lgogdownloader:/root/.config/lgogdownloader" lgogdownloader-syb:latest <args>
+
+CREDITS
+Sude- (https://github.com/Sude-/lgogdownloader)
+	for his great GOG downloader application
+
+acheronfail / lgogdownloader-docker (https://github.com/acheronfail/lgogdownloader-docker):
+	- for his idea to push me to make my own docker image for this
+	- runme.sh (is his entrypoint.sh)
+	- instruction, how to run the container in the shell
+

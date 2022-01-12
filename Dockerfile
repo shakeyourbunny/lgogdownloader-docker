@@ -22,10 +22,6 @@ RUN cd $(ls) && ls -l && \
 
 # cleanup
 RUN apk del build-base cmake samurai wget jq tar gzip
-RUN apk list
-RUN ls -l /usr/bin/lgogdownloader
-
-
 
 ## runtime docker
 FROM alpine:edge 
@@ -35,5 +31,7 @@ RUN apk --no-cache add curl rhash jsoncpp tinyxml2 zlib htmlcxx@testing boost
 WORKDIR /build
 
 COPY --from=buildimage /usr/bin/lgogdownloader /usr/bin/lgogdownloader
-CMD ["/usr/bin/lgogdownloader"]
+COPY runme.sh /
+RUN chmod +x /runme.sh
+ENTRYPOINT ["/runme.sh"]
 
